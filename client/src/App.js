@@ -1,17 +1,29 @@
-import Cookies from 'js-cookie';
+import axios from 'axios';
 import {useEffect} from "react";
 import {connect} from "react-redux";
 import Signin from './Pages/Authentication/Signin';
 import {LOGEDIN} from "./redux/actions/actions";
 
 function App({isAuthenticated, LOGEDIN}) {
-  console.log("isAuthenticated", isAuthenticated)
   useEffect(()=>{
-    const authCookie = Cookies.get("authcookie");
-    console.log("authCookie", authCookie)
-    if(authCookie){
-      LOGEDIN(true)
+    // Check if user is authenticated
+    async function checkRequest() {
+      try {
+        const res = await axios({
+          url: "/user/check",
+          method : "GET"
+        })
+        const authCookie = res.data;
+        if(authCookie){
+          LOGEDIN(true)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+  
     }
+    checkRequest()
+    
   })
   return (
     isAuthenticated ?

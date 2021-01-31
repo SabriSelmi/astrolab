@@ -35,7 +35,8 @@ module.exports = {
             const {sign_userName, sign_password} = req.body;
             const user = await User.findOne({userName : sign_userName});
             if(user){
-                const match = user.isValidPassword(sign_password);
+                const match = await user.isValidPassword(sign_password);
+                console.log("match", match)
                 if(match){
                     const accessToken = jwt.sign(user.toJSON(), process.env.SECRET_KEY);
                     res.cookie('authcookie', accessToken,{maxAge:900000,httpOnly:true});
@@ -66,16 +67,21 @@ module.exports = {
     checkToken : async (req, res, next)=>{
        //get authcookie from request
         const authcookie = req.cookies.authcookie
-
-        //verify token which is in cookie value
-        jwt.verify(authcookie,process.env.SECRET_KEY,(err,data)=>{
-        if(err){
-            res.sendStatus(403)
-        } 
-        else if(data.user){
-            req.user = data.user
-            next()
+        if(authcookie){
+            //verify token which is in cookie value
+            jwt.verify(authcookie,process.env.SECRET_KEY,(err,data)=>{
+                if(err){
+                    console.log(err)
+                    res.sendStatus(403)
+                } 
+                else if(data){
+                    req.user = data
+                    next()
+                }
+            })
+        }else{
+            res.sendStatus(401)
         }
-    })
+        
     }
 }
