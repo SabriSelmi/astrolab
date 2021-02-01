@@ -7,6 +7,9 @@ import reducers from './redux/reducers';
 import reduxThunk from 'redux-thunk';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap";
+
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

@@ -88,8 +88,8 @@ class Signin extends React.Component {
         console.log(this.state)
         const {userName, sign_userName, password, sign_password, password2, email, requesting} = this.state;
         return ( 
-            <div className="container-fluid">
-		        <div className="container">
+            <div className="container-fluid head-title-login">
+		        <div className="container sign-container">
                     <h2 className="text-center">Welcome to E@sy Shop</h2>
                     <p className="text-center">
                         <small id="passwordHelpInline" className="text-muted"> Follow us on facebook <a href="https://www.facebook.com/triples.a"> E@sy Shop</a>.</small>

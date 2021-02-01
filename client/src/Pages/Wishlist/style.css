@@ -1,0 +1,15 @@
+.add-button{
+    width: 100%;
+}
+.br-white{
+    border-right: 1px solid white;
+}
+.min-width-100{
+    min-height: 100vh;
+}
+.active-side{
+    background-color: white;
+}
+.pointer{
+    cursor: pointer;
+}

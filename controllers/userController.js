@@ -36,10 +36,9 @@ module.exports = {
             const user = await User.findOne({userName : sign_userName});
             if(user){
                 const match = await user.isValidPassword(sign_password);
-                console.log("match", match)
                 if(match){
                     const accessToken = jwt.sign(user.toJSON(), process.env.SECRET_KEY);
-                    res.cookie('authcookie', accessToken,{maxAge:900000,httpOnly:true});
+                    res.cookie('authcookie', accessToken,{maxAge:86400000,httpOnly:true});
                     res.status(200).json({
                         success : true,
                         message : "user signed in successfully"
@@ -83,5 +82,9 @@ module.exports = {
             res.sendStatus(401)
         }
         
+    }, 
+    logout : (req, res, next)=>{
+        res.clearCookie("authcookie");
+        res.end();
     }
 }
