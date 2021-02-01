@@ -34,7 +34,7 @@ class Signin extends React.Component {
                     }
                 })
                 if(res.data.success){
-                    Toast.success(res.data.message, 3000)
+                    Toast.success(res.data.message, 2000)
                     await this.setState({
                         requesting : false
                     })
@@ -44,7 +44,7 @@ class Signin extends React.Component {
                 await this.setState({
                     requesting : false
                 })
-                Toast.fail(error.response.data.message, 3000)
+                Toast.fail(error.response.data.message, 2000)
             }    
         }else{
             await this.setState({
@@ -85,7 +85,6 @@ class Signin extends React.Component {
 
     }
     render() { 
-        console.log(this.state)
         const {userName, sign_userName, password, sign_password, password2, email, requesting} = this.state;
         return ( 
             <div className="container-fluid head-title-login">

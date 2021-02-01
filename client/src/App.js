@@ -5,9 +5,10 @@ import Loader from './Components/Loader/Loader';
 import NavBar from './Components/Navbar/Navbar';
 import Signin from './Pages/Authentication/Signin';
 import Routes from './Pages/main/Routes';
-import {LOGEDIN} from "./redux/actions/actions";
+import {LOGEDIN, GETWISHLISTS, GETPRODUCTS} from "./redux/actions/actions";
+import "./App.css";
 
-function App({isAuthenticated, LOGEDIN}) {
+function App({isAuthenticated, LOGEDIN, GETPRODUCTS, GETWISHLISTS}) {
   const [fetching, setFetching] = useState(true);
   useEffect(()=>{
     // Check if user is authenticated
@@ -30,6 +31,8 @@ function App({isAuthenticated, LOGEDIN}) {
   
     }
     checkRequest()
+    GETWISHLISTS()
+    GETPRODUCTS()
     
   })
   return (
@@ -37,7 +40,10 @@ function App({isAuthenticated, LOGEDIN}) {
     isAuthenticated ?
     <div className="App">
       <NavBar/>
-      <Routes/>
+      <div className="padd-top-76">
+         <Routes/>
+      </div>
+     
     </div> :
     <Signin/> :
     <Loader/>
@@ -48,4 +54,4 @@ function mapStateToProps(state) {
     isAuthenticated : state.auth.isAuthenticated
   }
 }
-export default connect(mapStateToProps, {LOGEDIN})(App);
+export default connect(mapStateToProps, {LOGEDIN, GETWISHLISTS, GETPRODUCTS})(App);

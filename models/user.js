@@ -1,10 +1,10 @@
 let mongoose = require('mongoose')
-let Schmea = mongoose.Schema
+let Schema = mongoose.Schema
 let bcrypt = require('bcrypt')
 
 // Create User Schema
 
-const USERSCHEMA = new Schmea({
+const USERSCHEMA = new Schema({
 
     userName: {
       type: String,

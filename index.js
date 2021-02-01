@@ -20,6 +20,8 @@ mongoose
     .catch(err => console.log(err.response))
 
 app.use("/user",require('./routes/userRoutes.js'));
+app.use("/wishlist",require('./routes/wishlistRoutes.js'));
+app.use("/product",require('./routes/productRoutes.js'));
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/client/build')));

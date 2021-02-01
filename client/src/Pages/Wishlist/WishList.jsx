@@ -1,17 +1,26 @@
-import React from 'react';
-import LeftSide from './LeftSide';
-import WishlistModal from './Modal';
-import "./style.css";
+import React, { useEffect } from 'react';
+import {connect} from "react-redux";
 
-const WishlistPage = () => {
+import LeftSide from '../../Components/SideBar/LeftSide';
+import WishlistModal from './Modal';
+
+const WishlistPage = ({wishlists}) => {
     return ( 
         <div className="container-fluid">
             <div className="row">
-                <LeftSide/>
+                <LeftSide 
+                button={"Add Wishlist"}
+                id_modal={"#addWishlist"}
+                data={wishlists}
+                />
                 <WishlistModal/>
             </div>
         </div>
      );
 }
- 
-export default WishlistPage;
+function mapStateToProps(state) {
+    return {
+        wishlists : state.wishlist.wishlists
+    }
+} 
+export default connect(mapStateToProps)(WishlistPage);
