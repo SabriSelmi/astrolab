@@ -18,14 +18,21 @@ class Signin extends React.Component {
             [e.target.name] : e.target.value
         })
     }
+    // user sign up handler
     handleRegisterSubmit = async (e) =>{
         e.preventDefault();
-        await this.setState({
+
+        // Disable button when submitting
+        this.setState({
             requesting : true
         })
+
         const {userName, email, password, password2} = this.state;
+
+        // Compare passwords
         if(password === password2){
             try {
+                // Add new user
                 let res = await axios({
                     url : "/user/signup",
                     method : "POST",
@@ -35,32 +42,34 @@ class Signin extends React.Component {
                 })
                 if(res.data.success){
                     Toast.success(res.data.message, 2000)
-                    await this.setState({
+                    this.setState({
                         requesting : false
                     })
                 }
             } catch (error) {
                 console.log(error.response.data)
-                await this.setState({
+                this.setState({
                     requesting : false
                 })
                 Toast.fail(error.response.data.message, 2000)
             }    
         }else{
-            await this.setState({
+            this.setState({
                 requesting : false
             })
-            Toast.fail("Passwords don't match", 3000)
+            Toast.fail("Passwords don't match", 2000)
         }
         
     }
+    // function to handle login action
     handleLoginSubmit = async (e) =>{
         const {sign_userName, sign_password} = this.state;
         e.preventDefault();
-        await this.setState({
+        this.setState({
             requesting : true
         })
         try {
+            // sign in user
             let res = await axios({
                 url : "/user/signin",
                 method : "POST",
@@ -71,13 +80,13 @@ class Signin extends React.Component {
 
             if(res.data.success){
                 Toast.success(res.data.message, 3000);
-                this.props.LOGEDIN(true);
-                await this.setState({
+                this.setState({
                     requesting : false
                 })
+                this.props.LOGEDIN(true);
             }
         } catch (error) {
-            await this.setState({
+            this.setState({
                 requesting : false
             })
             Toast.fail(error.response.data.message, 3000)
@@ -100,17 +109,17 @@ class Signin extends React.Component {
                                 <fieldset>							
                                     <p className="text-uppercase pull-center text-secondary"><b>SIGN UP</b> </p>	
                                     <div className="form-group">
-                                        <input type="text" name="userName" value={userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange}/>
+                                        <input type="text" name="userName" value={userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange} required/>
                                     </div>
 
                                     <div className="form-group">
-                                        <input type="email" name="email" value={email || ""} className="form-control input-lg" placeholder="Email Address" onChange={this.handleChange}/>
+                                        <input type="email" name="email" value={email || ""} className="form-control input-lg" placeholder="Email Address" onChange={this.handleChange} required/>
                                     </div>
                                     <div className="form-group">
-                                        <input type="password" autoComplete="password" value={password || ""} name="password" className="form-control input-lg" placeholder="Password" onChange={this.handleChange}/>
+                                        <input type="password" autoComplete="password" value={password || ""} name="password" className="form-control input-lg" placeholder="Password" onChange={this.handleChange} required/>
                                     </div>
                                         <div className="form-group">
-                                        <input type="password" autoComplete="confirm-password" value={password2 || ""} name="password2" className="form-control input-lg" placeholder="Confirm Password" onChange={this.handleChange}/>
+                                        <input type="password" autoComplete="confirm-password" value={password2 || ""} name="password2" className="form-control input-lg" placeholder="Confirm Password" onChange={this.handleChange} required/>
                                     </div>
                                     <div className="mt-2">
                                             <button type="submit" className="btn btn-md btn-primary" disabled={requesting}>Register</button>
@@ -128,10 +137,10 @@ class Signin extends React.Component {
                                     <p className="text-uppercase text-secondary"> <b>Login using your account:</b> </p>	
                                         
                                     <div className="form-group">
-                                        <input type="text" name="sign_userName" value={sign_userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange}/>
+                                        <input type="text" name="sign_userName" value={sign_userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange} required/>
                                     </div>
                                     <div className="form-group">
-                                        <input type="password" autoComplete="sign_password" name="sign_password" value={sign_password || ""} className="form-control input-lg" placeholder="Password" onChange={this.handleChange}/>
+                                        <input type="password" autoComplete="sign_password" name="sign_password" value={sign_password || ""} className="form-control input-lg" placeholder="Password" onChange={this.handleChange} required/>
                                     </div>
                                     <div>
                                         <button type="submit" className="btn btn-md btn-primary" disabled={requesting}>Sign In</button>

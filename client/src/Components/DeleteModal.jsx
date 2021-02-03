@@ -1,31 +1,33 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import Toast from "light-toast";
 import { connect } from 'react-redux';
-import { GETPRODUCTS, GETWISHLISTS, SELECTPRODUCT, SELECTWISHLIST} from '../redux/actions/actions';
+import { deleteProduct, deleteWishlist, GETPRODUCTS, GETWISHLISTS, SELECTPRODUCT, SELECTWISHLIST} from '../redux/actions/actions';
 
 const DeleteModal = ({type, id, GETPRODUCTS, GETWISHLISTS, SELECTPRODUCT, SELECTWISHLIST, name}) => {
     const [requesting, setRequesting] = useState(false);
     const deleteElement = async () =>{
         try {
             setRequesting(true);
-        if(type === "Product"){
-           await axios({
-                url : "/product/"+id,
-                method : "DELETE"
-            });
+        if(type === "Product"){      
+            //  delete product
+            deleteProduct(id, (success)=>{
+                if (success) {
+                    GETPRODUCTS();
+                    SELECTPRODUCT({});
+                    Toast.success("Product Deleted successfully")
+                }
+            })
             
-            GETPRODUCTS();
-            SELECTPRODUCT({});
-            Toast.success("Product Deleted successfully")
         }else{
-            await axios({
-                url : "/wishlist/"+id,
-                method : "DELETE"
-            });
-            GETWISHLISTS();
-            SELECTWISHLIST({});
-            Toast.success("Wishlist Deleted successfully");
+            // delete wishlist
+            deleteWishlist(id,(success)=>{
+                if(success){
+                    GETWISHLISTS();
+                    SELECTWISHLIST({});
+                    Toast.success("Wishlist Deleted successfully");
+                }
+            })
+            
         }
         setRequesting(false);
         } catch (error) {

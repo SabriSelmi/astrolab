@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
-import {ADDPRODUCT, GETPRODUCTS, SELECTPRODUCT, UPDATEPRODUCT} from "../../redux/actions/actions";
+import {addProduct, GETPRODUCTS, SELECTPRODUCT, updateProduct} from "../../redux/actions/actions";
 
 class ProductModal extends Component {
     constructor(props) {
@@ -18,6 +18,7 @@ class ProductModal extends Component {
     }
     componentDidMount(){
         if(this.props.action === "edit"){
+            // set state variables of the current product if the action is edit
             const {name, price, currency, description, wishlist, status} = this.props.product;
             this.setState({
                 inputName :name, 
@@ -28,17 +29,20 @@ class ProductModal extends Component {
                 inputStatus :status
             })
         }else{
+            // init the state value the wishlist selected for a product
             this.setState({
                 inputWishlist : this.props.wishlists[0] ? this.props.wishlists[0]._id : "",
             })
         }
     }
     componentDidUpdate(prevProps){
+        // watch the wishlists array because it's asyncronus and it takes time to change the redux state
         if(this.props.wishlists !== prevProps.wishlists){
             this.setState({
                 inputWishlist : this.props.wishlists[0] ? this.props.wishlists[0]._id : "",
             })
         }        
+        // watch the changes of the product selected to refresh the values of the state
         if(this.props.product !== prevProps.product){
             const {name, price, currency, description, wishlist, status} = this.props.product;
             this.setState({
@@ -51,7 +55,7 @@ class ProductModal extends Component {
             })
         }
     }
-    // convert file to base64  
+    // convert image file to base64  
     getBase64 = (file, cb) =>{
         let reader = new FileReader();
         reader.readAsDataURL(file);
@@ -74,7 +78,7 @@ class ProductModal extends Component {
         });
 
     }
-    addProduct= async (e)=>{
+    addProductHandler= async (e)=>{
         e.preventDefault()
         try {
             const {GETPRODUCTS} = this.props;
@@ -84,13 +88,18 @@ class ProductModal extends Component {
             });
 
             // add product
-            await ADDPRODUCT(this.state, ()=>this.setState({
-                inputCurrency : "TND",
-                inputDescription : "",
-                inputName : "",
-                inputPrice : ""
-            }));
-            GETPRODUCTS(true);
+            await addProduct(this.state, (success)=>{
+                if(success){
+                    this.setState({
+                        inputCurrency : "TND",
+                        inputDescription : "",
+                        inputName : "",
+                        inputPrice : ""
+                    })
+                    GETPRODUCTS(true);
+                }
+            } );
+           
             this.setState({
                 requesting : false
             })
@@ -101,7 +110,7 @@ class ProductModal extends Component {
         }
 
     }
-    updateProduct = async (e)=>{
+    updateProductHandler = async (e)=>{
         e.preventDefault()
         try {
             const {GETPRODUCTS, product, SELECTPRODUCT} = this.props;
@@ -112,7 +121,7 @@ class ProductModal extends Component {
             });
 
             // edit product
-            await UPDATEPRODUCT(this.state, product._id);
+            await updateProduct(this.state, product._id);
             GETPRODUCTS(true);
             SELECTPRODUCT({
                 _id : product._id,
@@ -155,7 +164,7 @@ class ProductModal extends Component {
             </div>
             <div className="modal-body">
                 <div className="container-fluid">
-                <form onSubmit={action === "edit" ? this.updateProduct : this.addProduct}>
+                <form onSubmit={action === "edit" ? this.updateProductHandler : this.addProductHandler}>
                     <div className="form-group text-center">
                     {buffer ? <button type="button" className="close" aria-label="Close" onClick={this.clearFile}>
                         <span aria-hidden="true">&times;</span>

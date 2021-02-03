@@ -10,6 +10,7 @@ const LeftSide = ({data, button, id_modal, select, product_selected,
     useEffect(()=>{
         if(select === "product"){
             if(!product_selected){
+                // init product selected to show in the right side of the screen
                 const initData = data[0]?data[0]["_id"]:"";
                 setActive(initData);
             }else{
@@ -17,6 +18,7 @@ const LeftSide = ({data, button, id_modal, select, product_selected,
             }
         }else{
             if(!wishlist_selected){
+                // init wishlist selected to show in the right side of the screen
                 const initData = data[0]?data[0]["_id"]:"";
                 setActive(initData);
             }else{

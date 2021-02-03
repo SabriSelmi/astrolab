@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { switchCurrency } from '../../redux/actions/actions';
 import "./table.css";
 
-const Table = ({cols, data, lines}) => {
+const Table = ({cols, data, lines, TND, EUR, current_currency}) => {
     const [active, setActive] = useState(1);
     const [dataShowed, setDataShowed] = useState([]);
     const pagesNumber = Math.ceil(data.length / lines);
     useEffect(()=>{
+        // init first set of data
         const initData = data.slice(0,lines);
         setDataShowed(initData)
     },[data, lines])
+
+    // Navigate to the next page
     const increment = () =>{
         setActive(active + 1)
         setDataShowed(data.slice(active * lines  , active * lines  + lines))
     }
+
+    // Navigate to the previous page
     const decrement = () =>{
         setActive(active - 1)
         setDataShowed(data.slice((active -1) * lines - lines, (active-1) * lines))
@@ -32,6 +38,12 @@ const Table = ({cols, data, lines}) => {
                    <td key={j}>
                        {el ==="image"?
                        <img className="img-table img-fluid" src={product[el]} alt="product"/>:
+                       el === "price" ?
+                        // switch currency function it takes as vars "current currency",
+                        // "currency to switch to" , "total value", "values related to 1 USD"
+                       switchCurrency(product["currency"], current_currency, product[el], {TND, EUR, USD : 1}) :
+                       el === "currency" ?
+                       current_currency :
                        product[el]
                        }
                    </td>)                 

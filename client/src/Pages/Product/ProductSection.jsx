@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import DeleteModal from '../../Components/DeleteModal';
+import { switchCurrency } from '../../redux/actions/actions';
 import Modal from './Modal';
 
 class ProductSection extends Component {
@@ -9,7 +10,12 @@ class ProductSection extends Component {
         this.state = {  }
     }
     render() { 
-        const {product, wishlists} = this.props;
+        const {product, wishlists, EUR, TND, current_currency} = this.props;
+        let wishlist_selected={};
+        if(product && product.name){
+            // indentify the wishlist selected
+           wishlist_selected = wishlists.filter(el=>el._id.toString() === product.wishlist.toString())[0];
+        }
         return ( 
             product && product.name ? 
             <div className="col-sm-9 mt-2">
@@ -26,7 +32,7 @@ class ProductSection extends Component {
                             </div>
                             <div>
                                 <label>Price: </label>
-                                <b> {product.price + " " + product.currency} {}</b>
+                                <b> {switchCurrency(product.currency, current_currency, product.price,{USD : 1, TND, EUR})  + " " + current_currency} {}</b>
                             </div>                        
                         
                     </div>
@@ -35,7 +41,7 @@ class ProductSection extends Component {
                     <div className="col-sm-3">
                         <b className="d-block">Wishlist</b>
                         <p>
-                            {wishlists.filter(el=>el._id.toString() === product.wishlist.toString())[0]?product.wishlist.toString()[0].name : ""}
+                            {wishlist_selected ? wishlist_selected.name : ""}
                         </p>
                     </div>
                 </div>
@@ -64,7 +70,10 @@ class ProductSection extends Component {
 function mapStateToProps(state) {
     return {
         product : state.product.product_selected,
-        wishlists : state.wishlist.wishlists
+        wishlists : state.wishlist.wishlists,
+        EUR : state.product.EUR,
+        TND : state.product.TND,
+        current_currency : state.nav.current_currency
     }
 } 
 export default connect(mapStateToProps)(ProductSection);

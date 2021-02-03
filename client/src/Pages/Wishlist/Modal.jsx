@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
-import {ADDWISHLIST, GETWISHLISTS, SELECTWISHLIST, UPDATEWISHLIST} from "../../redux/actions/actions";
+import {addWishlist, GETWISHLISTS, SELECTWISHLIST, updateWishlist} from "../../redux/actions/actions";
 
 class WishlistModal extends Component {
     constructor(props) {
@@ -31,7 +31,7 @@ class WishlistModal extends Component {
         }
     }
     
-    addWishlist = async () =>{
+    addWishlistHandler = async () =>{
         try {
             const {name_wishlist} = this.state;
             const {GETWISHLISTS} = this.props;
@@ -43,7 +43,9 @@ class WishlistModal extends Component {
                 name_wishlist : null
             });
             // add wishlist
-            await ADDWISHLIST(name_wishlist);
+            await addWishlist(name_wishlist);
+
+            // Get wishlists after update (set param to true to avoid updating the wishlist_selected in redux store )
             GETWISHLISTS(true);
 
             this.setState({
@@ -56,7 +58,7 @@ class WishlistModal extends Component {
         }
 
     }
-    updateWishlist = async () =>{
+    updateWishlistHandler = async () =>{
         try {
             const {name_wishlist} = this.state;
             const {GETWISHLISTS, wishlist, SELECTWISHLIST} = this.props;
@@ -64,16 +66,18 @@ class WishlistModal extends Component {
             this.setState({
                 requesting : true
             });
-            this.setState({
-                name_wishlist : null
+            // update wishlist
+            await updateWishlist(name_wishlist, wishlist._id,(succes)=>{
+                if(succes){
+                    GETWISHLISTS(true);
+
+                    // update the current wishlist selected
+                    SELECTWISHLIST({
+                        name : name_wishlist,
+                        _id : wishlist._id
+                    })
+                }
             });
-            // add wishlist
-            await UPDATEWISHLIST(name_wishlist, wishlist._id);
-            GETWISHLISTS(true);
-            SELECTWISHLIST({
-                name : name_wishlist,
-                _id : wishlist._id
-            })
             this.setState({
                 requesting : false
             });
@@ -106,7 +110,7 @@ class WishlistModal extends Component {
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" className="btn btn-primary" disabled={requesting} 
-                onClick={action === "edit"? this.updateWishlist : this.addWishlist}>
+                onClick={action === "edit"? this.updateWishlistHandler : this.addWishlistHandler}>
                    {action === "edit" ? "Edit" : "Add"} Wishlist
                 </button>
             </div>

@@ -23,7 +23,7 @@ const USERSCHEMA = new Schema({
 
 USERSCHEMA.pre('save', async function (next) {
   try {
-    // Generate a
+    // Generate a salt
     const SALT = await bcrypt.genSalt(10)
     // Generate a password hash (salt + hash)
         const PASSWORDHASH = await bcrypt.hash(this.password, SALT) 
@@ -37,7 +37,7 @@ USERSCHEMA.pre('save', async function (next) {
 
 USERSCHEMA.methods.isValidPassword = async function (newPassword) {
   try {
-      console.log(newPassword, "===", this.password)
+    // compare password with hashed password stored
     return await bcrypt.compare(newPassword, this.password)
   } catch (error) {
     throw new Error(error)

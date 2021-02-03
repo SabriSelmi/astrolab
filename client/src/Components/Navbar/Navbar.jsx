@@ -8,6 +8,7 @@ import axios from 'axios';
 
 const NavBar = ({wishlists, products, current_currency, SET_CURRENCY, SET_NAV}) => {
     const logout = async () => {
+        // delete cookies 
         await axios.get("/user/logout");
         window.location.reload();
     }
@@ -45,9 +46,9 @@ const NavBar = ({wishlists, products, current_currency, SET_CURRENCY, SET_NAV}) 
                     {current_currency}
                     </span>
                     <ul className="dropdown-menu" aria-labelledby="navbarDropdown1">
-                        <li><Link className="dropdown-item" to="/#" onClick={()=>SET_CURRENCY("TND")}>TND</Link></li>
-                        <li><Link className="dropdown-item" to="/#" onClick={()=>SET_CURRENCY("USD")}>USD</Link></li>
-                        <li><Link className="dropdown-item" to="/#" onClick={()=>SET_CURRENCY("EUR")}>EUR</Link></li>
+                        <li><span className="dropdown-item pointer" onClick={()=>SET_CURRENCY("TND")}>TND</span></li>
+                        <li><span className="dropdown-item pointer" onClick={()=>SET_CURRENCY("USD")}>USD</span></li>
+                        <li><span className="dropdown-item pointer" onClick={()=>SET_CURRENCY("EUR")}>EUR</span></li>
                     </ul>
                 </li>
             </ul>

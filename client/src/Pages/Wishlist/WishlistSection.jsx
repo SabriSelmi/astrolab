@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import DeleteModal from '../../Components/DeleteModal';
 import Grid from '../../Components/Grid/Grid';
 import Table from '../../Components/Table/Table';
-import { GETPRODUCTSWISHLIST } from '../../redux/actions/actions';
+import { getProductsWishlist } from '../../redux/actions/actions';
 import Modal from './Modal';
 
 class WishlistSection extends Component {
@@ -18,36 +18,44 @@ class WishlistSection extends Component {
     componentDidMount(){
         const id_wishlist = this.props.wishlist ? this.props.wishlist._id : null;
         if(id_wishlist){
-           GETPRODUCTSWISHLIST(id_wishlist, (data)=>this.setState({
+            // get the wishlist selected products and store them in the state
+           getProductsWishlist(id_wishlist, (data)=>this.setState({
                products : data
            }))
             
         }
     }
     componentDidUpdate(prevProps){
+        // Watch the wishlist selected change
         if(this.props.wishlist && this.props.wishlist._id !== prevProps.wishlist._id){
-            GETPRODUCTSWISHLIST(this.props.wishlist._id, (data)=>this.setState({
+            getProductsWishlist(this.props.wishlist._id, (data)=>this.setState({
                 products : data
             }))
         }
     }
     changeStatus = (status) =>{
+        // handle the product status filter
         this.setState({
             status 
         })
     }
     changeView = (list) =>{
+        // switch view between grid and list
         this.setState({
             list
         })
     }
     render() { 
-        const {wishlist} = this.props;
+        const {wishlist, TND, EUR, current_currency} = this.props;
         let {products, status, list} = this.state;
+
+        // columns to pass to the table
         const cols = products.length ? 
         Object.keys(products[0])
         .filter(el=> el !== "wishlist" && el !== "_id" && el !== "id_user" && el !== "createdAt" && el !== "updatedAt" && el !== "__v") : 
         [];
+
+        // filter products according to the status selected
         products = products.filter(el=>status === 0 ? el["status"] === "to buy" : el["status"] === "bought" )
         return ( 
             wishlist && wishlist.name ? 
@@ -77,8 +85,8 @@ class WishlistSection extends Component {
                         </div>
                     </div>
                 </div>
-                {list && products.length?<Table cols={cols} data={products} lines={2}/>:
-                products.length ? <Grid data={products} elementsNumber={3}/>:
+                {list && products.length?<Table cols={cols} data={products} lines={2} TND={TND} EUR={EUR} current_currency={current_currency}/>:
+                products.length ? <Grid data={products} elementsNumber={3} TND={TND} EUR={EUR} current_currency={current_currency}/>:
                 null
                 }                
                 <DeleteModal type="Wishlist" id={wishlist._id} name={wishlist.name}/>
@@ -91,6 +99,9 @@ class WishlistSection extends Component {
 function mapStateToProps(state) {
     return {
         wishlist : state.wishlist.wishlist_selected,
+        EUR : state.product.EUR,
+        TND : state.product.TND,
+        current_currency : state.nav.current_currency
     }
 } 
 export default connect(mapStateToProps)(WishlistSection);

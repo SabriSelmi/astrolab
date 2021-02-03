@@ -2,18 +2,24 @@ import React, {useEffect, useState} from 'react';
 import "./grid.css";
 import GridElement from './GridElement';
 
-const Grid = ({data, elementsNumber}) => {
+const Grid = ({data, elementsNumber, TND, EUR, current_currency}) => {
     const [active, setActive] = useState(1);
     const [dataShowed, setDataShowed] = useState([]);
+
+    // calculate number of pages
     const pagesNumber = Math.ceil(data.length / elementsNumber);
     useEffect(()=>{
+        // init first data set
         const initData = data.slice(0,elementsNumber);
         setDataShowed(initData)
     },[data, elementsNumber])
+
+    // navigate to the next page
     const increment = () =>{
         setActive(active + 1)
         setDataShowed(data.slice(active * elementsNumber  , active * elementsNumber  + elementsNumber))
     }
+    // navigate to the previous page
     const decrement = () =>{
         setActive(active - 1)
         setDataShowed(data.slice((active -1) * elementsNumber - elementsNumber, (active-1) * elementsNumber))
@@ -22,7 +28,7 @@ const Grid = ({data, elementsNumber}) => {
         <div className="mt-5">
             <div className="row row-cols-1 row-cols-md-3">
                 {
-                    dataShowed.map((el,i)=><GridElement product={el} key={i}/>)
+                    dataShowed.map((el,i)=><GridElement product={el} key={i} TND={TND} EUR={EUR} current_currency={current_currency}/>)
                 }                    
             </div>
             {dataShowed.length?
