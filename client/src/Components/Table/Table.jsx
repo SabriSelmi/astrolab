@@ -1,30 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import React, { Component } from 'react';
 import { switchCurrency } from '../../redux/actions/actions';
 import "./table.css";
 
-const Table = ({cols, data, lines, TND, EUR, current_currency}) => {
-    const [active, setActive] = useState(1);
-    const [dataShowed, setDataShowed] = useState([]);
-    const pagesNumber = Math.ceil(data.length / lines);
-    useEffect(()=>{
-        // init first set of data
+class Table extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {  
+            active : 1,
+            dataShowed : []
+        }
+    }
+    componentDidMount(){
+        const {data, lines} = this.props;
         const initData = data.slice(0,lines);
-        setDataShowed(initData)
-    },[data, lines])
-
+        this.setState({
+            dataShowed : initData
+        });
+    }
+    componentDidUpdate(prevProps){
+        if(JSON.stringify(this.props.data) !== JSON.stringify(prevProps.data)){
+            const {data, lines} = this.props;
+            const initData = data.slice(0,lines);
+            this.setState({
+                dataShowed : initData,
+                active : 1,
+            });
+        }
+    }
     // Navigate to the next page
-    const increment = () =>{
-        setActive(active + 1)
-        setDataShowed(data.slice(active * lines  , active * lines  + lines))
+    increment = () =>{
+        const {active} = this.state;
+        const {data, lines} = this.props;
+        this.setState({
+            active : this.state.active + 1,
+            dataShowed : data.slice(active * lines  , active * lines  + lines)
+        })
     }
 
     // Navigate to the previous page
-    const decrement = () =>{
-        setActive(active - 1)
-        setDataShowed(data.slice((active -1) * lines - lines, (active-1) * lines))
+    decrement = () =>{
+        const {active} = this.state;
+        const {data, lines} = this.props;
+        this.setState({
+            active : active - 1,
+            dataShowed : data.slice((active -1) * lines - lines, (active-1) * lines)
+        })
     }
-    return ( 
-        <div className="table-responsive">
+    
+    render() { 
+        const {cols, TND, EUR, current_currency, data, lines} = this.props;
+        const {dataShowed, active} = this.state;
+        const pagesNumber = Math.ceil(data.length / lines);
+
+        return ( <div className="table-responsive">
         <table className="table mt-5">
             <thead className="thead-dark">
                 <tr>
@@ -55,25 +83,26 @@ const Table = ({cols, data, lines, TND, EUR, current_currency}) => {
         <nav aria-label="Page navigation example">
             <ul className="pagination justify-content-end">
                 <li className={active === 1 ?"page-item disabled" : "page-item"}>
-                <span className="page-link pointer" onClick={active === 1 ? null : decrement}>Previous</span>
+                <span className="page-link pointer" onClick={active === 1 ? null : this.decrement}>Previous</span>
                 </li>
                 {active === 1 ? null : 
-                <li className="page-item"><span className="page-link pointer"  onClick={active === 1 ? null : decrement} >{active - 1}</span></li>
+                <li className="page-item"><span className="page-link pointer"  onClick={active === 1 ? null : this.decrement} >{active - 1}</span></li>
                 }
                 <li className="page-item active" aria-current="page">
                 <span className="page-link pointer">{active}</span>
                 </li>
                 {active === pagesNumber ? null : 
-                <li className="page-item"><span className="page-link pointer"  onClick={active === pagesNumber ? null : increment} >{active + 1}</span></li>
+                <li className="page-item"><span className="page-link pointer"  onClick={active === pagesNumber ? null : this.increment} >{active + 1}</span></li>
                 }
                 <li className={active === pagesNumber ? "page-item disabled" : "page-item"}>
-                <span className="page-link pointer" onClick={active === pagesNumber ? null : increment} >Next</span>
+                <span className="page-link pointer" onClick={active === pagesNumber ? null : this.increment} >Next</span>
                 </li>
             </ul>
         </nav>:null}
-        </div>
-     );
+        </div> );
+    }
 }
+ 
 Table.defaultProps = {
     cols : []
 }

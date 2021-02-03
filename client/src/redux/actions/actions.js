@@ -147,7 +147,6 @@ export const addProduct = async (data, cb) => {
     try{
         // add a new product
         const {inputName, inputPrice, inputCurrency, inputDescription, inputWishlist, inputStatus, image} = data;
-        console.log("add product data", data)
             let formData = new FormData();
             formData.append('image', image);
             formData.append('name', inputName);
