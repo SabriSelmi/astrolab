@@ -4,7 +4,11 @@ let Schema = mongoose.Schema;
 // Create Product Schema
 
 const PRODUCTSCHEMA = new Schema({
-
+    id_user : {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref :"user"
+    },
     name: {
       type: String,
       required: true

@@ -37,7 +37,7 @@ export const SET_CURRENCY = (currency) =>{
     }
 };
 
-export const GETWISHLISTS= () =>{
+export const GETWISHLISTS= (updated) =>{
     return async dispatch =>{
         try{
         const res = await axios({
@@ -46,7 +46,8 @@ export const GETWISHLISTS= () =>{
         })
         dispatch({
             type: WISHLIST_FETCH,
-            payload: res.data.wishlists
+            payload: res.data.wishlists,
+            updated
         })
 
     }catch (err){
@@ -72,7 +73,7 @@ export const ADDWISHLIST = async (name) => {
     }
 }
 
-export const GETPRODUCTS= () =>{
+export const GETPRODUCTS= (updated) =>{
     return async dispatch =>{
         try{
         const res = await axios({
@@ -81,7 +82,8 @@ export const GETPRODUCTS= () =>{
         })
         dispatch({
             type: PRODUCT_FETCH,
-            payload: res.data.products
+            payload: res.data.products,
+            updated
         })
 
     }catch (err){
@@ -90,7 +92,7 @@ export const GETPRODUCTS= () =>{
     }
 };
 
-export const ADDPRODUCT = async (data) => {
+export const ADDPRODUCT = async (data, cb) => {
     try{
         const {inputName, inputPrice, inputCurrency, inputDescription, inputWishlist, inputStatus} = data;
             let formData = new FormData();
@@ -107,6 +109,7 @@ export const ADDPRODUCT = async (data) => {
             data : formData
         })
         Toast.success(res.data.message, 2000);
+        cb()
 
 }catch (err){
     console.error('err', err)
@@ -138,6 +141,21 @@ export const UPDATEPRODUCT = async (data, id) => {
 }
 }
 
+export const UPDATEWISHLIST = async (name, id) => {
+    try{
+        const res = await axios({
+            method : "PUT",
+            url : "/wishlist/" + id,
+            data : {name}
+        })
+        Toast.success(res.data.message, 2000);
+
+}catch (err){
+    console.error('err', err)
+    Toast.fail(err.response.data.message, 2000);
+}
+}
+
 export const SELECTPRODUCT = (product) =>{
     return dispatch =>{
         dispatch({
@@ -153,5 +171,16 @@ export const SELECTWISHLIST = (wishlist) =>{
             type : SELECT_WISHLIST,
             payload : wishlist
         })
+    }
+}
+
+export const GETPRODUCTSWISHLIST = async (id, cb) =>{
+    try {
+        const res = await axios({
+        url : "/product/products/" + id
+        })
+        cb(res.data.products)
+    } catch (error) {
+        console.log(error)
     }
 }

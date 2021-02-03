@@ -119,7 +119,7 @@ class Signin extends React.Component {
                             </form>
                         </div>
                         
-                        <div className="col-md-2">
+                        <div className="col-md-2 mb-2">
                         </div>
                         
                         <div className="col-md-5">

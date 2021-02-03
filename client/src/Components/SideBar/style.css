@@ -4,7 +4,7 @@
 .br-white{
     border-right: 1px solid white;
 }
-.min-width-100{
+.min-height-100{
     min-height: 100vh;
 }
 .active-side{
@@ -13,3 +13,9 @@
 .pointer{
     cursor: pointer;
 }
+
+@media (max-width: 575px){
+    .min-height-100 {
+      min-height: unset;
+}
+} 

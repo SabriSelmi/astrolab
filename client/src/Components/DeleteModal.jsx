@@ -20,7 +20,7 @@ const DeleteModal = ({type, id, GETPRODUCTS, GETWISHLISTS, SELECTPRODUCT, SELECT
             Toast.success("Product Deleted successfully")
         }else{
             await axios({
-                url : "/wishlist"+id,
+                url : "/wishlist/"+id,
                 method : "DELETE"
             });
             GETWISHLISTS();

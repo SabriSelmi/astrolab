@@ -1,13 +1,33 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { connect } from 'react-redux';
 import {SELECTPRODUCT, SELECTWISHLIST} from "../../redux/actions/actions";
 import "./style.css";
 
 
-const LeftSide = ({data, button, id_modal, select, SELECTPRODUCT, SELECTWISHLIST}) => {
-    const [active, setActive] = useState(0);
+const LeftSide = ({data, button, id_modal, select, product_selected,
+    SELECTPRODUCT, SELECTWISHLIST, wishlist_selected}) => {
+    const [active, setActive] = useState();
+    useEffect(()=>{
+        if(select === "product"){
+            if(!product_selected){
+                const initData = data[0]?data[0]["_id"]:"";
+                setActive(initData);
+            }else{
+                setActive(product_selected._id);
+            }
+        }else{
+            if(!wishlist_selected){
+                const initData = data[0]?data[0]["_id"]:"";
+                setActive(initData);
+            }else{
+                setActive(wishlist_selected._id);
+            }
+        }
+        
+
+    },[data, active, wishlist_selected, product_selected, select])
     return ( 
-        <div className="col-sm-3 br-white min-width-100">
+        <div className="col-sm-3 br-white min-height-100">
             <button type="button" className="btn btn-primary add-button mt-2" data-toggle="modal" data-target={id_modal}>
                 + {button}
             </button>
@@ -29,7 +49,12 @@ const LeftSide = ({data, button, id_modal, select, SELECTPRODUCT, SELECTWISHLIST
 }
 
 LeftSide.defaulProps={
-    data : []
+    data : [{}]
 }
-
-export default connect(null,{SELECTPRODUCT, SELECTWISHLIST})(LeftSide);
+function mapStateToProps(state) {
+    return {
+        wishlist_selected : state.wishlist.wishlist_selected,
+        product_selected : state.product.product_selected,
+    }
+}
+export default connect(mapStateToProps,{SELECTPRODUCT, SELECTWISHLIST})(LeftSide);

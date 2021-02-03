@@ -6,6 +6,7 @@ const path = require('path');
 const dUri = new Datauri();
 const dataUri = req => dUri.format(path.extname(req.file.originalname).toString(), req.file.buffer);
 const cloudinary = require('cloudinary');
+const { validVars } = require('../utils');
 
 cloudinary.config({
     cloud_name: "natulyn",
@@ -35,13 +36,8 @@ module.exports = {
     addProduct : async (req, res, next)=>{
         try {
             const {name, price, currency, description, wishlist, status} = req.body;
-            console.log("name",name, typeof(name))
-            if(name!=="undefined" && 
-               price!=="undefined" && 
-               currency!=="undefined" && 
-               description!=="undefined" && 
-               wishlist!=="undefined" && 
-               status!=="undefined"){
+            const id_user = req.user._id;
+            if(validVars([name, price, currency, description, wishlist, status, id_user])){
                 if(req.file){
                     const file = dataUri(req).content; 
                     cloudinary.uploader.upload(file,async (result)=>
@@ -49,7 +45,7 @@ module.exports = {
                         try {
                             const image = result.secure_url;
                             const newProduct = new Product({
-                                name, price, currency, description, wishlist, status, image
+                                id_user, name, price, currency, description, wishlist, status, image
                             })
                             await newProduct.save();
                             res.status(200).json({
@@ -67,7 +63,7 @@ module.exports = {
                        })  
                 } else{
                     const newProduct = new Product({
-                        name, price, currency, description, wishlist, status
+                       id_user, name, price, currency, description, wishlist, status
                     })
                     await newProduct.save();
                     res.status(200).json({
@@ -153,7 +149,8 @@ module.exports = {
     }, 
     getProducts : async (req, res, next)=>{
         try {
-            const products = await Product.find({});
+            const id_user = req.user._id;
+            const products = await Product.find({id_user});
             res.status(200).json({
                 success : true,
                 products

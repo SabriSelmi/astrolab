@@ -27,6 +27,10 @@ class ProductModal extends Component {
                 inputWishlist :wishlist, 
                 inputStatus :status
             })
+        }else{
+            this.setState({
+                inputWishlist : this.props.wishlists[0] ? this.props.wishlists[0]._id : "",
+            })
         }
     }
     componentDidUpdate(prevProps){
@@ -80,16 +84,16 @@ class ProductModal extends Component {
             });
 
             // add product
-            await ADDPRODUCT(this.state);
-            GETPRODUCTS();
-            this.setState({
-                requesting : false,
+            await ADDPRODUCT(this.state, ()=>this.setState({
                 inputCurrency : "TND",
                 inputDescription : "",
                 inputName : "",
                 inputPrice : ""
-            });
-
+            }));
+            GETPRODUCTS(true);
+            this.setState({
+                requesting : false
+            })
         } catch (error) {
             this.setState({
                 requesting : false
@@ -109,7 +113,7 @@ class ProductModal extends Component {
 
             // edit product
             await UPDATEPRODUCT(this.state, product._id);
-            GETPRODUCTS();
+            GETPRODUCTS(true);
             SELECTPRODUCT({
                 _id : product._id,
                 name : inputName,

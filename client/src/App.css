@@ -1,3 +1,13 @@
 .padd-top-76{
   padding-top: 76px;
 }
+.w-188{
+  width: 188px;
+}
+.b-white{
+  border: 1px solid white;
+}
+.active-tab{
+  color: blue;
+  text-decoration: underline;
+}

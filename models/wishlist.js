@@ -4,7 +4,11 @@ let Schema = mongoose.Schema;
 // Create wishlist Schema
 
 const WISHLISTSCHEMA = new Schema({
-
+  id_user : {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref :"user"
+  },
     name: {
       type: String,
       required: true

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {connect} from "react-redux";
 
 import LeftSide from '../../Components/SideBar/LeftSide';
 import WishlistModal from './Modal';
+import WishlistSection from './WishlistSection';
 
 const WishlistPage = ({wishlists}) => {
     return ( 
@@ -13,7 +14,8 @@ const WishlistPage = ({wishlists}) => {
                 id_modal={"#addWishlist"}
                 data={wishlists}
                 />
-                <WishlistModal/>
+                <WishlistSection/>
+                <WishlistModal id="addWishlist"/>
             </div>
         </div>
      );

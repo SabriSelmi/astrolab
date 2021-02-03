@@ -1,16 +1,26 @@
 const Wishlist = require("../models/wishlist");
+const { validVars } = require("../utils");
 module.exports = {
     addWishlist : async (req, res, next)=>{
         try {
             const {name} = req.body;
-            const newWishlist = new Wishlist({
-                name
+            const id_user = req.user._id;
+            if(validVars([id_user, name])){
+                const newWishlist = new Wishlist({
+                id_user, name
             })
             await newWishlist.save();
             res.status(200).json({
                 success : true,
                 message : "Wishlist added successfully"
             })
+            }else{
+                res.status(500).json({
+                success : false,
+                message : "An error has been occured, make sure you fill all informations and try again"
+            })
+            }
+            
         } catch (error) {
             console.log(error)
             res.status(500).json({
@@ -70,7 +80,8 @@ module.exports = {
     }, 
     getWishlists : async (req, res, next)=>{
         try {
-            const wishlists = await Wishlist.find({});
+            const id_user = req.user._id;
+            const wishlists = await Wishlist.find({id_user});
             res.status(200).json({
                 success : true,
                 wishlists
