@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 mongoose
-    .connect(process.env.MONGODB_URI ||
-        'mongodb+srv://SabriSelmi:10101992house*@natulyn-nscik.mongodb.net/cv-maker?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(process.env.MONGODB_URI 
+        , { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('mongodb connected...'))
     .catch(err => console.log(err.response))
 

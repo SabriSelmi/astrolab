@@ -30,9 +30,25 @@ function App({isAuthenticated, LOGEDIN, GETPRODUCTS, GETWISHLISTS}) {
       }
   
     }
-    checkRequest()
-    GETWISHLISTS()
-    GETPRODUCTS()
+        // Check if user is authenticated
+        async function getCurrenciesValue() {
+          try {
+            const res = await axios({
+              url: "https://api.currencyfreaks.com/latest?apikey="  + process.env.API_KEY,
+              method : "GET"
+            })
+            const tnd_value = res.data.rates["TND"];
+            const eur_value = res.data.rates["EUR"];
+            console.log(tnd_value, eur_value)
+          } catch (error) {
+            console.log(error)    
+          }
+      
+        }
+    checkRequest();
+    getCurrenciesValue();
+    GETWISHLISTS();
+    GETPRODUCTS();
     
   })
   return (
