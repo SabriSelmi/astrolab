@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import DeleteModal from '../../Components/DeleteModal';
-import { switchCurrency } from '../../redux/actions/actions';
-import Modal from './Modal';
+import { SETPRODUCTMODALACTION, switchCurrency } from '../../redux/actions/actions';
+import UpdateModal from './UpdateModal';
 
 class ProductSection extends Component {
     constructor(props) {
@@ -10,7 +10,7 @@ class ProductSection extends Component {
         this.state = {  }
     }
     render() { 
-        const {product, wishlists, EUR, TND, current_currency} = this.props;
+        const {product, wishlists, EUR, TND, current_currency, SETPRODUCTMODALACTION} = this.props;
         let wishlist_selected={};
         if(product && product.name){
             // indentify the wishlist selected
@@ -55,13 +55,17 @@ class ProductSection extends Component {
                 </div>
                     </div>
                     <div className="col-sm-2">
-                        <div className="text-secondary pointer" data-toggle="modal" data-target={"#"+product._id.toString().replace(/[0-9]/g, "x")}><i className="far fa-edit"></i> Edit</div>
+                        <div className="text-secondary pointer" 
+                            data-toggle="modal" 
+                            onClick={()=>SETPRODUCTMODALACTION("edit")}
+                            data-target={"#"+product._id.toString().replace(/[0-9]/g, "x")}
+                            ><i className="far fa-edit"></i> Edit</div>
                         <div className="text-danger pointer" data-toggle="modal" data-target="#deleteModal"><i className="far fa-trash-alt"></i> Delete</div>
                     </div>
                 </div>
                 
                 <DeleteModal type="Product" id={product._id} name={product.name}/>
-                <Modal action="edit" id={product._id.toString().replace(/[0-9]/g, "x")} product={product}/>
+                <UpdateModal id={product._id.toString().replace(/[0-9]/g, "x")} product={product}/>
             </div> :
             null
          );
@@ -76,4 +80,4 @@ function mapStateToProps(state) {
         current_currency : state.nav.current_currency
     }
 } 
-export default connect(mapStateToProps)(ProductSection);
+export default connect(mapStateToProps, {SETPRODUCTMODALACTION})(ProductSection);

@@ -1,11 +1,11 @@
 import React,{useState, useEffect} from 'react';
 import { connect } from 'react-redux';
-import {SELECTPRODUCT, SELECTWISHLIST} from "../../redux/actions/actions";
+import {SELECTPRODUCT, SELECTWISHLIST, SETPRODUCTMODALACTION} from "../../redux/actions/actions";
 import "./style.css";
 
 
 const LeftSide = ({data, button, id_modal, select, product_selected,
-    SELECTPRODUCT, SELECTWISHLIST, wishlist_selected}) => {
+    SELECTPRODUCT, SELECTWISHLIST, wishlist_selected, SETPRODUCTMODALACTION}) => {
     const [active, setActive] = useState();
     useEffect(()=>{
         if(select === "product"){
@@ -30,7 +30,7 @@ const LeftSide = ({data, button, id_modal, select, product_selected,
     },[data, active, wishlist_selected, product_selected, select])
     return ( 
         <div className="col-sm-3 br-white min-height-100">
-            <button type="button" className="btn btn-primary add-button mt-2" data-toggle="modal" data-target={id_modal}>
+            <button type="button" className="btn btn-primary add-button mt-2" data-toggle="modal" data-target={id_modal} onClick={()=>SETPRODUCTMODALACTION("add")}>
                 + {button}
             </button>
                 {data.map((el,i)=><div className={`nav-link mt-2 pointer ${active === el._id.toString() ? "active-side" : ""}`} key={i} 
@@ -59,4 +59,4 @@ function mapStateToProps(state) {
         product_selected : state.product.product_selected,
     }
 }
-export default connect(mapStateToProps,{SELECTPRODUCT, SELECTWISHLIST})(LeftSide);
+export default connect(mapStateToProps,{SELECTPRODUCT, SELECTWISHLIST, SETPRODUCTMODALACTION})(LeftSide);

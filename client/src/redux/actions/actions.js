@@ -8,7 +8,8 @@ import {AUTH_SIGN_IN,
     PRODUCT_FETCH,
     SELECT_PRODUCT,
     SELECT_WISHLIST,
-    GET_CURRENCIES
+    GET_CURRENCIES,
+    SET_PRODUCT_MODAL_ACTION
 } from "./types";
 
 export const checkUser = async (cb) => {
@@ -146,6 +147,7 @@ export const addProduct = async (data, cb) => {
     try{
         // add a new product
         const {inputName, inputPrice, inputCurrency, inputDescription, inputWishlist, inputStatus, image} = data;
+        console.log("add product data", data)
             let formData = new FormData();
             formData.append('image', image);
             formData.append('name', inputName);
@@ -268,4 +270,13 @@ export const deleteWishlist = async (id, cb) =>{
         cb(false)
     }
     
+}
+
+export const SETPRODUCTMODALACTION = (action) =>{
+    return dispatch =>{
+        dispatch({
+            type : SET_PRODUCT_MODAL_ACTION,
+            payload : action
+        })
+    }
 }

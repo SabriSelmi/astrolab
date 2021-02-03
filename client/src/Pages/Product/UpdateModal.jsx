@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
-import {addProduct, GETPRODUCTS} from "../../redux/actions/actions";
+import {GETPRODUCTS, SELECTPRODUCT, updateProduct} from "../../redux/actions/actions";
 
-class ProductModal extends Component {
+class UpdateModal extends Component {
     constructor(props) {
         super(props);
         this.state = { 
@@ -17,18 +17,32 @@ class ProductModal extends Component {
         })
     }
     componentDidMount(){
-            // init the state value the wishlist selected for a product
+        if(this.props.product){
+            // set state variables of the current product if the action is edit
+            const {name, price, currency, description, wishlist, status} = this.props.product;
             this.setState({
-                inputWishlist : this.props.wishlists[0] ? this.props.wishlists[0]._id : "",
+                inputName :name, 
+                inputPrice :price, 
+                inputCurrency :currency, 
+                inputDescription :description,
+                inputWishlist :wishlist, 
+                inputStatus :status
             })
+        }
     }
-    componentDidUpdate(prevProps){
-        // watch the wishlists array because it's asyncronus and it takes time to change the redux state
-        if(this.props.wishlists !== prevProps.wishlists){
+    componentDidUpdate(prevProps){      
+        // watch the changes of the product selected to refresh the values of the state
+        if(this.props.product !== prevProps.product){
+            const {name, price, currency, description, wishlist, status} = this.props.product;
             this.setState({
-                inputWishlist : this.props.wishlists[0] ? this.props.wishlists[0]._id : "",
+                inputName :name, 
+                inputPrice :price, 
+                inputCurrency :currency, 
+                inputDescription :description,
+                inputWishlist :wishlist, 
+                inputStatus :status
             })
-        }        
+        }
     }
     // convert image file to base64  
     getBase64 = (file, cb) =>{
@@ -53,36 +67,38 @@ class ProductModal extends Component {
         });
 
     }
-    addProductHandler= async (e)=>{
+    updateProductHandler = async (e)=>{
         e.preventDefault()
         try {
-            const {GETPRODUCTS} = this.props;
+            const {GETPRODUCTS, product, SELECTPRODUCT} = this.props;
+            const {buffer, inputName, inputPrice, inputCurrency, inputDescription, inputWishlist, inputStatus} = this.state;
             // disable adding multiple requests (UX)
             this.setState({
                 requesting : true
             });
 
-            // add product
-            await addProduct(this.state, (success)=>{
-                if(success){
-                    this.setState({
-                        inputCurrency : "TND",
-                        inputDescription : "",
-                        inputName : "",
-                        inputPrice : ""
-                    })
-                    GETPRODUCTS(true);
-                }
-            } );
-           
+            // edit product
+            await updateProduct(this.state, product._id);
+            GETPRODUCTS(true);
+            SELECTPRODUCT({
+                _id : product._id,
+                name : inputName,
+                price : inputPrice,
+                currency : inputCurrency,
+                wishlist : inputWishlist,
+                description : inputDescription,
+                status : inputStatus,
+                image : buffer ? buffer : product.image
+            })
             this.setState({
                 requesting : false
-            })
+            });
         } catch (error) {
             this.setState({
                 requesting : false
             });        
         }
+
     }
     clearFile = () =>{
         this.setState({
@@ -92,31 +108,33 @@ class ProductModal extends Component {
     }
     render() { 
         const {inputName, inputPrice, inputCurrency, inputDescription, inputWishlist, inputStatus, requesting, buffer} = this.state;
-        const {wishlists, id} = this.props;
+        const {wishlists, id, product} = this.props;
+
         return ( 
         <div className="modal fade" id={id} data-backdrop="static" data-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
             <div className="modal-header">
-                <h5 className="modal-title" id="staticBackdropLabel">Add Product</h5>
+                <h5 className="modal-title" id="staticBackdropLabel">Edit Product</h5>
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div className="modal-body">
                 <div className="container-fluid">
-                <form onSubmit={this.addProductHandler}>
+                <form onSubmit={this.updateProductHandler}>
                     <div className="form-group text-center">
                     {buffer ? <button type="button" className="close" aria-label="Close" onClick={this.clearFile}>
                         <span aria-hidden="true">&times;</span>
                     </button> : null}
-                        <label htmlFor="inputAddImage">
+                        <label htmlFor="inputImage">
                             {buffer ?<img width="50%" className="img-fluid rounded-circle" src={buffer} alt="input-product"/> : 
                             <img width="50%" className="img-fluid rounded-circle" 
-                            src={"https://res.cloudinary.com/natulyn/image/upload/v1612184228/default-pro_aexujq.jpg"} 
+                            src={product.image? product.image : 
+                            "https://res.cloudinary.com/natulyn/image/upload/v1612184228/default-pro_aexujq.jpg"} 
                             alt="input-product"/> }
                         </label>
-                        <input type="file" className="form-control-file" id="inputAddImage" hidden onChange={this.handleFile}/>  
+                        <input type="file" className="form-control-file" id="inputImage" hidden onChange={this.handleFile}/>  
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-6">
@@ -158,7 +176,7 @@ class ProductModal extends Component {
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" className="btn btn-primary" disabled={requesting}>
-                        Add Product
+                        Edit Product
                         </button>
             </div>
                     </form>
@@ -174,4 +192,4 @@ function mapStateToProps(state) {
         wishlists : state.wishlist.wishlists
     }
 } 
-export default connect(mapStateToProps, {GETPRODUCTS})(ProductModal);
+export default connect(mapStateToProps, {GETPRODUCTS, SELECTPRODUCT})(UpdateModal);
