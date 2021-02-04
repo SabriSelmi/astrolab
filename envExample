@@ -1,0 +1,19 @@
+## Rename your fine to .env and complete the values to run it in dev environment
+
+## write a secret key to be used by jsonwebtoken
+SECRET_KEY= 
+
+## Api key from https://billing.currencyfreaks.com/, you can create a free account
+API_KEY= 
+
+## Mongo url for connection
+MONGODB_URI= 
+
+## Cloudinary api key
+CLOUDINARY_API_KEY= 
+
+## Cloudinary api secret key
+CLOUDINARY_API_SECRET= 
+
+## Cloudinary cloud name
+CLOUDINARY_CLOUD_NAME= 
