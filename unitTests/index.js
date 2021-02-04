@@ -1,3 +1,4 @@
+'use strict';
 // Require models
 const User = require("../models/user");
 const Prodcut = require("../models/product");
@@ -22,7 +23,7 @@ var id_wishlist = "";
 
 
 /***************** User routes  **************/
-describe("POST /user/signup", ()=>{
+describe("USER", ()=>{
     before(async ()=>{
         let user = await User.findOne({
             userName
@@ -49,9 +50,7 @@ describe("POST /user/signup", ()=>{
         expect(res.status).to.equal(409)
         
     })
-})
 
-describe("POST /user/signin", ()=>{        
     it("Shoud sign a user with userName and password", async () => {
         let res = await chai
             .request(server)
@@ -73,9 +72,10 @@ describe("POST /user/signin", ()=>{
     })
 })
 
+
 /***************** Wishlist routes  **************/
 
-describe("POST /wishlist/", ()=>{     
+describe("WISHLIST", ()=>{     
     it("Shoud add a new wishlist", async () => {
         let res = await chai
             .request(server)
@@ -106,8 +106,6 @@ describe("POST /wishlist/", ()=>{
         
     })
 
-})
-describe("GET /wishlist/", ()=>{       
     it("Shoud get all wishlists", async () => {
         let res = await chai
             .request(server)
@@ -118,8 +116,7 @@ describe("GET /wishlist/", ()=>{
         expect(res.body.wishlists.length).to.equal(1);
         id_wishlist = res.body.wishlists[0]["_id"];
     })
-})
-describe("GET /wishlist/:id", ()=>{       
+
     it("Shoud get a wishlist by its id", async () => {
         let res = await chai
             .request(server)
@@ -129,9 +126,7 @@ describe("GET /wishlist/:id", ()=>{
         expect(res.body.wishlist).to.be.an("object");
         expect(res.body.wishlist._id).to.equal(id_wishlist);
     })
-})
 
-describe("PUT /wishlist/:id", ()=>{       
     it("Shoud update a wishlist", async () => {
         let res = await chai
             .request(server)
@@ -143,18 +138,12 @@ describe("PUT /wishlist/:id", ()=>{
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal("Wishlist updated successfully");
     })
+
 })
 
 
 /***************** Product routes  **************/
-    describe("POST /product/", ()=>{     
-        beforeEach(async()=>{
-            let res = await chai
-                .request(server)
-                .post('/user/signin')
-                .send({sign_userName : userName, sign_password:password})  
-            token = res["headers"]["set-cookie"][0].split(";")[0]
-        })   
+    describe("PRODUCT", ()=>{      
         it("Shoud add a new product", async () => {
             let res = await chai
                 .request(server)
@@ -184,8 +173,7 @@ describe("PUT /wishlist/:id", ()=>{
             expect(res.status).to.equal(500)
             
         })
-    })
-    describe("GET /product/", ()=>{       
+
         it("Shoud get all products", async () => {
             let res = await chai
                 .request(server)
@@ -196,54 +184,53 @@ describe("PUT /wishlist/:id", ()=>{
             expect(res.body.products.length).to.equal(1);
             id_product = res.body.products[0]["_id"];
         })
-    })
-describe("GET /product/:id", ()=>{       
-    it("Shoud get a product by its id", async () => {
-        let res = await chai
-            .request(server)
-            .get('/product/'+id_product)
-            .set("Cookie", `${token}`)
-        expect(res.status).to.equal(200);
-        expect(res.body.product).to.be.an("object");
-        expect(res.body.product._id).to.equal(id_product);
-    })
-})
 
-describe("PUT /product/:id", ()=>{       
-    it("Shoud update a product", async () => {
-        let res = await chai
-            .request(server)
-            .put('/product/'+id_product)
-            .set("Cookie", `${token}`)
-            .send({
-                name: "test update",
-                description: "test",
-                price: 45,
-                currency: "TND",
-                wishlist: id_wishlist,
-                status: "to buy"
-            })
-        expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal("Product updated successfully");
-    })
-})
+        it("Shoud get a product by its id", async () => {
+            let res = await chai
+                .request(server)
+                .get('/product/'+id_product)
+                .set("Cookie", `${token}`)
+            expect(res.status).to.equal(200);
+            expect(res.body.product).to.be.an("object");
+            expect(res.body.product._id).to.equal(id_product);
+        })
 
-describe("GET /product/products/:id", ()=>{       
-    it("Shoud get all products related to a specific wishlist", async () => {
-        let res = await chai
-            .request(server)
-            .get('/product/products/'+id_wishlist)
-            .set("Cookie", `${token}`)
-        expect(res.status).to.equal(200);
-        expect(res.body.products).to.be.an("array");
-        expect(res.body.products.length).to.equal(1);
+        it("Shoud update a product", async () => {
+            let res = await chai
+                .request(server)
+                .put('/product/'+id_product)
+                .set("Cookie", `${token}`)
+                .send({
+                    name: "test update",
+                    description: "test",
+                    price: 45,
+                    currency: "TND",
+                    wishlist: id_wishlist,
+                    status: "to buy"
+                })
+            expect(res.status).to.equal(200);
+            expect(res.body.message).to.equal("Product updated successfully");
+        })
+
+        it("Shoud get all products related to a specific wishlist", async () => {
+            let res = await chai
+                .request(server)
+                .get('/product/products/'+id_wishlist)
+                .set("Cookie", `${token}`)
+            expect(res.status).to.equal(200);
+            expect(res.body.products).to.be.an("array");
+            expect(res.body.products.length).to.equal(1);
+        })
     })
-})
+   
 
 /************* Delete routes ************/
 
-describe("Delete /product/:id && Delete /wishlist/:id", ()=>{       
-    it("Shoud delete a product defined by its id", async () => {
+describe("DELETE PRODUCT AND WISHLIST", ()=>{       
+    after(()=>{
+        process.exit(0)
+    })
+    it("Shoud delete a product defined by its id", async (done) => {
         let res = await chai
             .request(server)
             .delete('/product/'+id_product)
@@ -261,3 +248,4 @@ describe("Delete /product/:id && Delete /wishlist/:id", ()=>{
         expect(res.body.message).to.equal("Wishlist deleted successfully");
     })
 })
+
