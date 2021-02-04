@@ -25,7 +25,7 @@ mongoose
         // use routes declared 
 
         app.use("/user",require('./routes/userRoutes.js'));
-        app.use("/wishlist",require('./routes/wishlistRoutes.js'));
+        app.use("/wishlists",require('./routes/wishlistRoutes.js'));
         app.use("/product",require('./routes/productRoutes.js'));
         app.get("/currencies", checkToken, getCurrencies);
 
