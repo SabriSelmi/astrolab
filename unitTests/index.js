@@ -227,10 +227,7 @@ describe("WISHLIST", ()=>{
 /************* Delete routes ************/
 
 describe("DELETE PRODUCT AND WISHLIST", ()=>{       
-    after(()=>{
-        process.exit(0)
-    })
-    it("Shoud delete a product defined by its id", async (done) => {
+    it("Shoud delete a product defined by its id", async () => {
         let res = await chai
             .request(server)
             .delete('/product/'+id_product)
@@ -248,4 +245,3 @@ describe("DELETE PRODUCT AND WISHLIST", ()=>{
         expect(res.body.message).to.equal("Wishlist deleted successfully");
     })
 })
-
