@@ -9,7 +9,8 @@ module.exports = {
             if(validVars([id_user, name])){
                 // check if wishlist exist with the same name
                 const exist = await Wishlist.findOne({
-                    name
+                    name,
+                    id_user
                 })
                 if (validVars([exist])){
                     // reject request with conflict response
@@ -45,9 +46,16 @@ module.exports = {
     editWishlist : async (req, res, next)=>{
         try {
             const id_wishlist = req.params.id;
+            const id_user = req.user._id;
             const {name} = req.body;
             // find another wishlist with the same name
-            const exist = await Wishlist.findOne({$and:[{_id : {$ne : id_wishlist}},{name}]});
+            const exist = await Wishlist
+                                .findOne({$and:
+                                    [
+                                        {_id : {$ne : id_wishlist}},
+                                        {name, id_user},
+                                    ]
+                                });
             if (validVars([exist])) {
                 // Reject request with conflict status
                 return res.status(409).json({

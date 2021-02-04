@@ -1,15 +1,16 @@
 const rp = require('request-promise');
 
 module.exports={
+    // test an array of variables if they are valid
     validVars : (variables) => {
         for (const variable of variables) {
-            console.log("var", variable)
             if(!variable || variable == "undefined" || variable =="null" || variable == {} ){
                 return false
             }
         }
         return true
     },
+    // Get currencies values based on 1USD
     getCurrencies : async (req, res) =>{
         try {
             const result = await rp({

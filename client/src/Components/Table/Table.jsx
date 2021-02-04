@@ -11,6 +11,7 @@ class Table extends Component {
         }
     }
     componentDidMount(){
+        // init array with the first set of data
         const {data, lines} = this.props;
         const initData = data.slice(0,lines);
         this.setState({
@@ -19,6 +20,7 @@ class Table extends Component {
     }
     componentDidUpdate(prevProps){
         if(JSON.stringify(this.props.data) !== JSON.stringify(prevProps.data)){
+            // watch data modification on switching wishlist to init data
             const {data, lines} = this.props;
             const initData = data.slice(0,lines);
             this.setState({
@@ -50,6 +52,8 @@ class Table extends Component {
     render() { 
         const {cols, TND, EUR, current_currency, data, lines} = this.props;
         const {dataShowed, active} = this.state;
+
+        // calculate the page number
         const pagesNumber = Math.ceil(data.length / lines);
 
         return ( <div className="table-responsive">

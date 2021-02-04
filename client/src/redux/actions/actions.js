@@ -105,7 +105,7 @@ export const GETWISHLISTS= (updated) =>{
     }
 };
 
-export const addWishlist = async (name) => {
+export const addWishlist = async (name, cb) => {
     // add a new wishlist
         try{
             const res = await axios({
@@ -115,10 +115,12 @@ export const addWishlist = async (name) => {
                     name
                 }
             })
+            cb(true)
             Toast.success(res.data.message, 2000);
 
     }catch (err){
         console.error('err', err)
+        cb(false)
         Toast.fail(err.response.data.message, 2000);
     }
 }
@@ -169,7 +171,7 @@ export const addProduct = async (data, cb) => {
 }
 }
 
-export const updateProduct = async (data, id) => {
+export const updateProduct = async (data, id, cb) => {
     try{
         // update a product
         const {inputName, inputPrice, inputCurrency, inputDescription, inputWishlist, inputStatus, image} = data;
@@ -186,10 +188,12 @@ export const updateProduct = async (data, id) => {
             url : "/product/" + id,
             data : formData
         })
+        cb(true);
         Toast.success(res.data.message, 2000);
 
 }catch (err){
     console.error('err', err)
+    cb(false);
     Toast.fail(err.response.data.message, 2000);
 }
 }

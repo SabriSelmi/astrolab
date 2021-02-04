@@ -9,7 +9,7 @@
     "main": "index.js",
     "scripts": {
         "client-install": "npm install --prefix client",
-        "test": "mocha unitTests/**/*.js",
+        "test": "mocha --timeout 10000 unitTests/**/*.js",
         "start": "node index.js",
         "client": "npm start --prefix client",
         "dev": "concurrently \"npm start\" \"npm run client\"",
@@ -29,6 +29,7 @@
     "dependencies": {
         "bcrypt": "5.0.0",
         "body-parser": "^1.18.3",
+        "chai-http": "^4.3.0",
         "cloudinary": "^1.14.0",
         "cookie-parser": "^1.4.5",
         "cors": "^2.8.5",
@@ -42,6 +43,8 @@
         "request-promise": "^4.2.6"
     },
     "devDependencies": {
-        "concurrently": "^4.1.2"
+        "chai": "^4.3.0",
+        "concurrently": "^4.1.2",
+        "mocha": "^8.2.1"
     }
 }

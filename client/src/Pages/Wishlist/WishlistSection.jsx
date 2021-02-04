@@ -27,7 +27,8 @@ class WishlistSection extends Component {
     }
     componentDidUpdate(prevProps){
         // Watch the wishlist selected change
-        if(this.props.wishlist && this.props.wishlist._id !== prevProps.wishlist._id){
+        console.log("this.props.wishlist", this.props.wishlist)
+        if(this.props.wishlist && JSON.stringify(this.props.wishlist) !== JSON.stringify(prevProps.wishlist)){
             getProductsWishlist(this.props.wishlist._id, (data)=>this.setState({
                 products : data
             }))

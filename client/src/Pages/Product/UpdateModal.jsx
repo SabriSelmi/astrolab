@@ -70,7 +70,7 @@ class UpdateModal extends Component {
     updateProductHandler = async (e)=>{
         e.preventDefault()
         try {
-            const {GETPRODUCTS, product, SELECTPRODUCT} = this.props;
+            const {GETPRODUCTS, product, SELECTPRODUCT, id} = this.props;
             const {buffer, inputName, inputPrice, inputCurrency, inputDescription, inputWishlist, inputStatus} = this.state;
             // disable adding multiple requests (UX)
             this.setState({
@@ -78,18 +78,23 @@ class UpdateModal extends Component {
             });
 
             // edit product
-            await updateProduct(this.state, product._id);
-            GETPRODUCTS(true);
-            SELECTPRODUCT({
-                _id : product._id,
-                name : inputName,
-                price : inputPrice,
-                currency : inputCurrency,
-                wishlist : inputWishlist,
-                description : inputDescription,
-                status : inputStatus,
-                image : buffer ? buffer : product.image
-            })
+            await updateProduct(this.state, product._id, success=>{
+                if(success){
+                    GETPRODUCTS(true);
+                    SELECTPRODUCT({
+                        _id : product._id,
+                        name : inputName,
+                        price : inputPrice,
+                        currency : inputCurrency,
+                        wishlist : inputWishlist,
+                        description : inputDescription,
+                        status : inputStatus,
+                        image : buffer ? buffer : product.image
+                    })
+                    document.getElementById("close-update-"+id).click();
+                }
+            });
+            
             this.setState({
                 requesting : false
             });
@@ -174,7 +179,7 @@ class UpdateModal extends Component {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-secondary" id={"close-update-"+id} data-dismiss="modal">Close</button>
                         <button type="submit" className="btn btn-primary" disabled={requesting}>
                         Edit Product
                         </button>

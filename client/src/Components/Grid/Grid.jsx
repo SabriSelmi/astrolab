@@ -12,6 +12,7 @@ class Grid extends Component {
     }
     componentDidMount(){
         const {data, elementsNumber} = this.props;
+        // init array with the first set of data
         const initData = data.slice(0,elementsNumber);
         this.setState({
             dataShowed : initData
@@ -19,6 +20,7 @@ class Grid extends Component {
     }
     componentDidUpdate(prevProps){
         if(JSON.stringify(this.props.data) !== JSON.stringify(prevProps.data)){
+            // watch data modification on switching wishlist to init data
             const {data, elementsNumber} = this.props;
             const initData = data.slice(0,elementsNumber);
             this.setState({
@@ -49,6 +51,7 @@ class Grid extends Component {
     render() { 
         const {TND, EUR, current_currency, data, elementsNumber} = this.props;
         const {dataShowed, active} = this.state;
+        // calculate the page number
         const pagesNumber = Math.ceil(data.length / elementsNumber);
         return(
         <div className="mt-5">

@@ -81,7 +81,7 @@ module.exports = {
             jwt.verify(authcookie,process.env.SECRET_KEY,(err,data)=>{
                 if(err){
                     console.log(err)
-                    res.sendStatus(403)
+                    res.sendStatus(401)
                 } 
                 else if(data){
                     req.user = data

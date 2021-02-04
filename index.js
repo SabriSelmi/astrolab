@@ -20,29 +20,32 @@ app.use(cookieParser());
 mongoose
     .connect(process.env.MONGODB_URI 
         , { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('mongodb connected...'))
+    .then(() => {
+        console.log('mongodb connected...');
+        // use routes declared 
+
+        app.use("/user",require('./routes/userRoutes.js'));
+        app.use("/wishlist",require('./routes/wishlistRoutes.js'));
+        app.use("/product",require('./routes/productRoutes.js'));
+        app.get("/currencies", checkToken, getCurrencies);
+
+        // serve builded client in production
+        if (process.env.NODE_ENV === 'production') {
+            app.use(express.static(path.join(__dirname, '/client/build')));
+            app.get('*', function(req, res) {
+                const index = path.join(__dirname, '/client/build', 'index.html');
+                res.sendFile(index);
+            });
+        }
+        // create server
+        app.listen(PORT, (err) => {
+            if (err) {
+                console.log('Cant Connect')
+            } else {
+                console.log('runing in port ' + PORT)
+            }
+        })
+    })
     .catch(err => console.log(err.response))
 
-    // use routes declared 
-app.use("/user",require('./routes/userRoutes.js'));
-app.use("/wishlist",require('./routes/wishlistRoutes.js'));
-app.use("/product",require('./routes/productRoutes.js'));
-app.get("/currencies", checkToken, getCurrencies);
-
-// serve builded client in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '/client/build')));
-    app.get('*', function(req, res) {
-        const index = path.join(__dirname, '/client/build', 'index.html');
-        res.sendFile(index);
-    });
-}
-// create server
-app.listen(PORT, (err) => {
-    if (err) {
-        console.log('Cant Connect')
-    } else {
-        console.log('runing in port ' + PORT)
-    }
-})
 module.exports = app

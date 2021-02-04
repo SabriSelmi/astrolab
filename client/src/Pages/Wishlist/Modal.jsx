@@ -24,7 +24,7 @@ class WishlistModal extends Component {
         }
     }
     componentDidUpdate(prevProps){      
-        if(this.props.wishlist !== prevProps.wishlist){            
+        if(JSON.stringify(this.props.wishlist) !== JSON.stringify(prevProps.wishlist)){            
             this.setState({
                 name_wishlist :this.props.wishlist.name
             })
@@ -34,7 +34,7 @@ class WishlistModal extends Component {
     addWishlistHandler = async () =>{
         try {
             const {name_wishlist} = this.state;
-            const {GETWISHLISTS} = this.props;
+            const {GETWISHLISTS, id} = this.props;
             // disable adding multiple requests (UX)
             this.setState({
                 requesting : true
@@ -43,14 +43,19 @@ class WishlistModal extends Component {
                 name_wishlist : null
             });
             // add wishlist
-            await addWishlist(name_wishlist);
+            await addWishlist(name_wishlist, success=>{
+                if (success) {
+                    GETWISHLISTS(true);
 
-            // Get wishlists after update (set param to true to avoid updating the wishlist_selected in redux store )
-            GETWISHLISTS(true);
-
-            this.setState({
-                requesting : false
+                    // Get wishlists after update 
+                    // (set param to true to avoid updating the wishlist_selected in redux store )
+                    this.setState({
+                        requesting : false
+                    });
+                    document.getElementById("close-" + id).click();
+                }
             });
+            
         } catch (error) {
             this.setState({
                 requesting : false
@@ -61,7 +66,7 @@ class WishlistModal extends Component {
     updateWishlistHandler = async () =>{
         try {
             const {name_wishlist} = this.state;
-            const {GETWISHLISTS, wishlist, SELECTWISHLIST} = this.props;
+            const {GETWISHLISTS, wishlist, SELECTWISHLIST, id} = this.props;
             // disable adding multiple requests (UX)
             this.setState({
                 requesting : true
@@ -75,7 +80,8 @@ class WishlistModal extends Component {
                     SELECTWISHLIST({
                         name : name_wishlist,
                         _id : wishlist._id
-                    })
+                    });
+                    document.getElementById("close-" + id).click();
                 }
             });
             this.setState({
@@ -96,7 +102,7 @@ class WishlistModal extends Component {
         <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
             <div className="modal-header">
-                <h5 className="modal-title" id="staticBackdropLabel">{action === "edit" ? "Edit" : "Add"}  Wishlist</h5>
+                <h5 className="modal-title">{action === "edit" ? "Edit" : "Add"}  Wishlist</h5>
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -108,8 +114,8 @@ class WishlistModal extends Component {
                 </div>
             </div>
             <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" className="btn btn-primary" disabled={requesting} 
+                <button type="button" className="btn btn-secondary" id={"close-"+id} data-dismiss="modal">Close</button>
+                <button type="submit" className="btn btn-primary" disabled={requesting}
                 onClick={action === "edit"? this.updateWishlistHandler : this.addWishlistHandler}>
                    {action === "edit" ? "Edit" : "Add"} Wishlist
                 </button>

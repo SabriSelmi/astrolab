@@ -56,7 +56,7 @@ class ProductModal extends Component {
     addProductHandler= async (e)=>{
         e.preventDefault()
         try {
-            const {GETPRODUCTS} = this.props;
+            const {GETPRODUCTS, id} = this.props;
             // disable adding multiple requests (UX)
             this.setState({
                 requesting : true
@@ -69,9 +69,12 @@ class ProductModal extends Component {
                         inputCurrency : "TND",
                         inputDescription : "",
                         inputName : "",
-                        inputPrice : ""
+                        inputPrice : "",
+                        image : "",
+                        buffer:""
                     })
                     GETPRODUCTS(true);
+                    document.getElementById("close"+id).click();
                 }
             } );
            
@@ -156,7 +159,7 @@ class ProductModal extends Component {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal" id={"close"+id}>Close</button>
                         <button type="submit" className="btn btn-primary" disabled={requesting}>
                         Add Product
                         </button>

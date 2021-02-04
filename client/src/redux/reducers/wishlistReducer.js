@@ -8,7 +8,7 @@ const DEAFAULT_STATE = {
 const state = (state=DEAFAULT_STATE, action)=>{
     switch(action.type){
         case WISHLIST_FETCH:
-        return { ...state, wishlists : action.payload, wishlist_selected : action.updated ? state.wishlist_selected : action.payload[0] }
+        return { ...state, wishlists : action.payload, wishlist_selected : action.updated && state.wishlists.length ? state.wishlist_selected : action.payload[0] }
         case SELECT_WISHLIST:
         return { ...state, wishlist_selected : action.payload }
         default: return state
