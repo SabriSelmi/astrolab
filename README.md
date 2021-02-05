@@ -31,7 +31,7 @@ The React app is related to the node app with proxy
 Use can open the browser in http://localhost:3000 to see the web application
 
 
-#App Description #
+# App Description #
 
 ##  Sign in / Sign up Section 
 
