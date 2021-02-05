@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import DeleteModal from '../../Components/DeleteModal';
+import ReadMore from '../../Components/Truncate/Truncate';
 import { SETPRODUCTMODALACTION, switchCurrency } from '../../redux/actions/actions';
 import UpdateModal from './UpdateModal';
 
@@ -28,7 +29,9 @@ class ProductSection extends Component {
                     <div className="col-sm-8 d-flex justify-content-between flex-column">
                             <div>
                                 <h4>{product.name}</h4>
-                                <p>{product.description}</p>
+                                <ReadMore>
+                                    <p>{product.description}</p>
+                                </ReadMore>
                             </div>
                             <div>
                                 <label>Price: </label>
@@ -37,16 +40,15 @@ class ProductSection extends Component {
                         
                     </div>
                 </div>
-                <div className="row mt-2">
-                    <div className="col-sm-3">
+                <hr/>
+                <div className="mt-2 d-flex justify-content-between">
+                    <div>
                         <b className="d-block">Wishlist</b>
                         <p>
                             {wishlist_selected ? wishlist_selected.name : ""}
                         </p>
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-3">
+                    <div>
                     <b className="d-block">Status</b>
                         <p>
                             {product.status}

@@ -85,7 +85,7 @@ class WishlistSection extends Component {
                         </div>
                     </div>
                 </div>
-                {list && products.length?<Table cols={cols} data={products} lines={2} TND={TND} EUR={EUR} current_currency={current_currency}/>:
+                {list && products.length?<Table cols={cols} data={products} lines={10} TND={TND} EUR={EUR} current_currency={current_currency}/>:
                 products.length ? <Grid data={products} elementsNumber={3} TND={TND} EUR={EUR} current_currency={current_currency}/>:
                 null
                 }                

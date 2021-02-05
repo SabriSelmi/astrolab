@@ -40,7 +40,9 @@ class UpdateModal extends Component {
                 inputCurrency :currency, 
                 inputDescription :description,
                 inputWishlist :wishlist, 
-                inputStatus :status
+                inputStatus :status,
+                buffer:null,
+                image:null
             })
         }
     }
