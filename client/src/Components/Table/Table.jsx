@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Truncate from "../Truncate/Truncate";
 import { switchCurrency } from '../../redux/actions/actions';
 import "./table.css";
 
@@ -76,7 +77,11 @@ class Table extends Component {
                        switchCurrency(product["currency"], current_currency, product[el], {TND, EUR, USD : 1}) :
                        el === "currency" ?
                        current_currency :
-                       product[el]
+                       el==="description"?
+                       <Truncate lines={1}>
+                            {product[el]}
+                       </Truncate>:
+                       product[el]                       
                        }
                    </td>)                 
                    } 
