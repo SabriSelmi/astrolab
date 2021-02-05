@@ -47,7 +47,6 @@ class Signin extends React.Component {
                     })
                 }
             } catch (error) {
-                console.log(error.response.data)
                 this.setState({
                     requesting : false
                 })
