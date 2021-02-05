@@ -10,7 +10,10 @@ class Signin extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            requesting : false
+            requesting : false,
+            showPass : false,
+            showConfirm : false,
+            showSigninPass :false
          }
     }
     handleChange = (e) =>{
@@ -92,8 +95,34 @@ class Signin extends React.Component {
         }
 
     }
+    showPassword = (input)=>{
+        const {showPass, showConfirm, showSigninPass} = this.state;
+        switch (input) {
+            case "password":
+                this.setState({
+                    showPass : !showPass
+                })
+                break;
+
+            case "confirm-password":
+                this.setState({
+                    showConfirm : !showConfirm
+                })
+                break;
+
+            case "sign_password":
+                this.setState({
+                    showSigninPass : !showSigninPass
+                })
+                break;
+
+            default:
+                break;
+        }
+    }
     render() { 
-        const {userName, sign_userName, password, sign_password, password2, email, requesting} = this.state;
+        const {userName, sign_userName, password, showPass, showConfirm,
+               showSigninPass, sign_password, password2, email, requesting} = this.state;
         return ( 
             <div className="container-fluid head-title-login">
 		        <div className="container sign-container">
@@ -108,17 +137,32 @@ class Signin extends React.Component {
                                 <fieldset>							
                                     <p className="text-uppercase pull-center text-secondary"><b>SIGN UP</b> </p>	
                                     <div className="form-group">
-                                        <input type="text" name="userName" value={userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange} required/>
+                                        <label htmlFor="userName">User Name *</label>
+                                        <input type="text" name="userName" id="userName" value={userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange} required/>
                                     </div>
 
                                     <div className="form-group">
-                                        <input type="email" name="email" value={email || ""} className="form-control input-lg" placeholder="Email Address" onChange={this.handleChange} required/>
+                                        <label htmlFor="email">Email *</label>
+                                        <input type="email" name="email" id="email" value={email || ""} className="form-control input-lg" placeholder="Email Address" onChange={this.handleChange} required/>
                                     </div>
                                     <div className="form-group">
-                                        <input type="password" autoComplete="password" value={password || ""} name="password" className="form-control input-lg" placeholder="Password" onChange={this.handleChange} required/>
+                                        <label htmlFor="password">Password *</label>
+                                        <input type={showPass?"text":"password"} id="password" 
+                                                autoComplete="password" value={password || ""} 
+                                                name="password" className="form-control input-lg d-inline" 
+                                                placeholder="Password" onChange={this.handleChange} 
+                                                required/>
+                                        <i className="far fa-eye ml--30 pointer" onClick={()=>this.showPassword("password")}></i>
                                     </div>
                                         <div className="form-group">
-                                        <input type="password" autoComplete="confirm-password" value={password2 || ""} name="password2" className="form-control input-lg" placeholder="Confirm Password" onChange={this.handleChange} required/>
+                                        <label htmlFor="confirm-password">Confirm Password *</label>
+                                        <input type={showConfirm?"text":"password"} id="confirm-password" 
+                                                autoComplete="confirm-password" 
+                                                value={password2 || ""} name="password2" 
+                                                className="form-control input-lg d-inline" 
+                                                placeholder="Confirm Password" 
+                                                onChange={this.handleChange} required/>
+                                        <i className="far fa-eye ml--30 pointer" onClick={()=>this.showPassword("confirm-password")}></i>
                                     </div>
                                     <div className="mt-2">
                                             <button type="submit" className="btn btn-md btn-primary" disabled={requesting}>Register</button>
@@ -136,10 +180,19 @@ class Signin extends React.Component {
                                     <p className="text-uppercase text-secondary"> <b>Login using your account:</b> </p>	
                                         
                                     <div className="form-group">
-                                        <input type="text" name="sign_userName" value={sign_userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange} required/>
+                                        <label htmlFor="sign_userName">User Name *</label>
+                                        <input type="text" name="sign_userName" id="sign_userName" value={sign_userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange} required/>
                                     </div>
                                     <div className="form-group">
-                                        <input type="password" autoComplete="sign_password" name="sign_password" value={sign_password || ""} className="form-control input-lg" placeholder="Password" onChange={this.handleChange} required/>
+                                        <label htmlFor="sign_password">PAssword *</label>    
+                                        <input type={showSigninPass?"text":"password"} id="sign_password" 
+                                                autoComplete="sign_password" name="sign_password" 
+                                                value={sign_password || ""} className="form-control input-lg d-inline" 
+                                                placeholder="Password" 
+                                                onChange={this.handleChange} 
+                                                required/>
+                                    
+                                        <i className="far fa-eye ml--30 pointer" onClick={()=>this.showPassword("sign_password")}></i>
                                     </div>
                                     <div>
                                         <button type="submit" className="btn btn-md btn-primary" disabled={requesting}>Sign In</button>
