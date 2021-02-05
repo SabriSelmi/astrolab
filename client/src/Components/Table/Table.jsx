@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Truncate from "../Truncate/Truncate";
-import { switchCurrency } from '../../redux/actions/actions';
+import { SELECTPRODUCT, switchCurrency } from '../../redux/actions/actions';
 import "./table.css";
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 class Table extends Component {
     constructor(props) {
@@ -70,7 +72,11 @@ class Table extends Component {
                    {cols.map((el,j)=>
                    <td key={j}>
                        {el ==="image"?
-                       <img className="img-table img-fluid" src={product[el]} alt="product"/>:
+                       <Link to="/products" onClick={()=>this.props.SELECTPRODUCT(product)
+                       }>
+                           <img className="img-table img-fluid" src={product[el]} alt="product"/>
+                       </Link>
+                       :
                        el === "price" ?
                         // switch currency function it takes as vars "current currency",
                         // "currency to switch to" , "total value", "values related to 1 USD"
@@ -115,4 +121,4 @@ class Table extends Component {
 Table.defaultProps = {
     cols : []
 }
-export default Table;
+export default connect(null, {SELECTPRODUCT})(Table);

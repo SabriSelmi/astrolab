@@ -1,13 +1,17 @@
 import React from 'react';
 import Truncate from "../Truncate/Truncate";
-import { switchCurrency } from '../../redux/actions/actions';
+import { switchCurrency, SELECTPRODUCT } from '../../redux/actions/actions';
 import "./grid.css";
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-const GridElement = ({product, TND, EUR, current_currency}) => {
+const GridElement = ({product, TND, EUR, current_currency, SELECTPRODUCT}) => {
     return ( 
             <div className="col mb-4">
                 <div className="card min-vh-100">
-                    <img src={product.image} className="card-img-top" height="250px" alt="product"/>
+                    <Link to="/products" onClick={()=>SELECTPRODUCT(product)}>
+                        <img src={product.image} className="card-img-top" height="250px" alt="product"/>
+                    </Link>
                     <div className="card-body">
                         <h5 className="card-title">{product.name}</h5>                        
                             <Truncate lines={7}>
@@ -23,4 +27,4 @@ const GridElement = ({product, TND, EUR, current_currency}) => {
      );
 }
  
-export default GridElement;
+export default connect(null, {SELECTPRODUCT})(GridElement);
