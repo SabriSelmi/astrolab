@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 const GridElement = ({product, TND, EUR, current_currency, SELECTPRODUCT}) => {
     return ( 
             <div className="col mb-4">
-                <div className="card min-vh-100">
+                <div className="card min-vh-60">
                     <Link to="/products" onClick={()=>SELECTPRODUCT(product)}>
                         <img src={product.image} className="card-img-top" height="250px" alt="product"/>
                     </Link>
