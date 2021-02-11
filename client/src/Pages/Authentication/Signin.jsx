@@ -184,7 +184,7 @@ class Signin extends React.Component {
                                         <input type="text" name="sign_userName" id="sign_userName" value={sign_userName || ""} className="form-control input-lg" placeholder="username" onChange={this.handleChange} required/>
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="sign_password">PAssword *</label>    
+                                        <label htmlFor="sign_password">Password *</label>    
                                         <input type={showSigninPass?"text":"password"} id="sign_password" 
                                                 autoComplete="sign_password" name="sign_password" 
                                                 value={sign_password || ""} className="form-control input-lg d-inline" 
