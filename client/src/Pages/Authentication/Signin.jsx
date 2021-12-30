@@ -46,7 +46,11 @@ class Signin extends React.Component {
                 if(res.data.success){
                     Toast.success(res.data.message, 2000)
                     this.setState({
-                        requesting : false
+                        requesting : false,
+                        userName :"", 
+                        email : "", 
+                        password : "", 
+                        password2 : ""
                     })
                 }
             } catch (error) {
